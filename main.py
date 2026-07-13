@@ -6,7 +6,7 @@ import time
 import requests
 import re
 
-SHIKIMORI_API_URL = "https://shikimori.one/api/topics"
+SHIKIMORI_API_URL = "https://shikimori.io/api/topics"
 USER_AGENT = "ShikimoriAnimeNotifier/1.0"
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 LAST_ID_FILE = "last_id.txt"
@@ -35,7 +35,7 @@ def fetch_topics(limit=10):
         "type": "Topics::NewsTopic"
     }
 
-    response = requests.get(SHIKIMORI_API_URL, headers=HEADERS, params=params)
+    response = requests.get(SHIKIMORI_API_URL, headers=HEADERS, params=params, timeout=10)
     response.raise_for_status()
     return response.json()
 
@@ -54,7 +54,7 @@ def send_to_discord(topics):
         if not DISCORD_WEBHOOK_URL or not webhook_urls:
             return
         for webhook_url in webhook_urls:
-            response = requests.post(webhook_url, json=payload)
+            response = requests.post(webhook_url, json=payload, timeout=10)
             if response.status_code not in (200, 204):
                 print(f"Ошибка отправки в Discord: {response.status_code} - {response.text}")
             else:
