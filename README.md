@@ -9,7 +9,7 @@
 2. Зайдите в нужный канал Discord → Настройки канала → Интеграции → Вебхуки.
 3. Создайте вебхук и скопируйте его URL.
 4. В вашем репозитории перейдите в Settings → Secrets and variables → Actions -> "New repository secret" и добавьте:
-5. Name = "DISCORD_WEBHOOK_URL", Secret = "Ваш полный URL вебхука Discord"
+5. Name = "DISCORD_WEBHOOK_URL", Secret = "Ваш полный URL вебхука Discord(можно использовать несколько вебхуков, разделенных запятой)"
 6. Перейдите во вкладку "Actions" вашего репозитория и выбрав "Shikimori Anime News Notifier" запустите кнопкой "Run workflow"
 7. Если нужно протестировать отправку без учёта состояния, используйте тестовый workflow Shikimori Anime News Notifier Tester.
 Он удаляет файл last_id.txt перед запуском, поэтому будут отправлены все последние новости, независимо от того, отправлялись ли они раньше.    
