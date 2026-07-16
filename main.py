@@ -71,8 +71,8 @@ def build_embed(topic):
     linked = topic.get('linked')
 
     description = clean_html_to_text(html_body)
-    if len(description) > 600:
-        description = description[:600].rsplit(' ', 1)[0] + '…'
+    if len(description) > 800:
+        description = description[:800].rsplit(' ', 1)[0] + '…'
 
     video_url = extract_youtube_url(html_footer)
     if video_url:
@@ -80,18 +80,28 @@ def build_embed(topic):
 
     embed = {
         "title": topic.get('topic_title', 'Новость'),
-        "url": f"https://shikimori.one/forum/news/{topic.get('id')}",
+        "url": f"https://shikimori.io/forum/news/{topic.get('id')}",
         "description": description,
         "color": 0x00b0f4,
         "timestamp": topic.get('created_at', datetime.now(timezone.utc).isoformat()),
-        "footer": {"text": "Shikimori News"}
+        "footer": {"text": "Shikimori Anime News", "icon_url": "https://shikimori.io/favicons/favicon-32x32.png"}
     }
 
     img_url = get_image_url(linked)
+    if not img_url:
+        img_url = extract_image_from_footer(html_footer)
     if img_url:
         embed["image"] = {"url": img_url}
 
     return embed
+
+def extract_image_from_footer(html_footer):
+    soup = BeautifulSoup(html_footer, 'html.parser')
+    for a in soup.find_all('a', href=True):
+        href = a['href']
+        if 'original' in href:
+            return href
+    return None
 
 def extract_youtube_url(html_footer):
     if not html_footer:
@@ -112,7 +122,7 @@ def get_image_url(linked):
     img = linked['image']
     url = img.get('original')
     if url and 'missing_original' not in url:
-        return f'https://shikimori.one{url}'
+        return f'https://shikimori.io{url}'
     return None
 
 def clean_html_to_text(html):
@@ -128,7 +138,7 @@ def clean_html_to_text(html):
         text = a.get_text(strip=True)
         if href and text:
             if href.startswith('/'):
-                href = f'https://shikimori.one{href}'
+                href = f'https://shikimori.io{href}'
             a.replace_with(f'[{text}]({href})')
         else:
             a.replace_with(text)
